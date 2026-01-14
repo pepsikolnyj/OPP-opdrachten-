@@ -1,0 +1,12 @@
+             [ LIBRARY ][ GYM ]
+                    |    /
+                    |   /
+[  PUB  ] ---- [ OUTSIDE ] ---- [ THEATRE ]
+                    |  
+                    |   
+                    |  
+                    |     
+                 [ LAB ]
+                    |
+                    |
+                [ OFFICE ]
