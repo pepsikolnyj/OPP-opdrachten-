@@ -1,4 +1,7 @@
-﻿using System;
+﻿//De rest van Opdracht 4 ga ik samen met opdracht 5 maken, want ik wil dat de speler zal winnen door de oppakken van alle items. 
+using System;
+using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 
 class Game
 {
@@ -67,16 +70,27 @@ class Game
 
         // Start game outside
         player.CurrentRoom = outside;
-	}
+
+		Item blade = new Item("Blade of Agility", 1);
+		Item pBooster = new Item("Point Booster", 5);
+		Item oAxe = new Item("Ogre Axe", 6);
+		Item wStaff = new Item("Wizardy Staff", 3);
+
+		pub.Chest.Put("Blade of Agility", blade);
+		theatre.Chest.Put("Point Booster", pBooster);
+		gym.Chest.Put("Ogre Axe",  oAxe);
+		lab.Chest.Put("Wizardy Staff", wStaff);
+
+    }
 
 	//  Main play routine. Loops until end of play.
 	public void Play()
 	{
 		PrintWelcome();
 
-		// Enter the main command loop. Here we repeatedly read commands and
-		// execute them until the player wants to quit.
-		bool finished = false;
+        // Enter the main command loop. Here we repeatedly read commands and
+        // execute them until the player wants to quit.
+        bool finished = false;
 		while (!finished)
 		{
 			Command command = parser.GetCommand();
@@ -85,7 +99,8 @@ class Game
 		Console.WriteLine("Thank you for playing.");
 		Console.WriteLine("Press [Enter] to continue.");
 		Console.ReadLine();
-	}
+        
+    }
 
 	// Print out the opening message for the player.
 	private void PrintWelcome()
@@ -130,15 +145,22 @@ class Game
 				if (player.isAlive())
 				{
 					Console.WriteLine($"You are alive! Your HP: {player.Health}");
+					Console.WriteLine($"Your inventory: {player.backpack.Show()}");
 				}
 				else
 				{
 					Console.WriteLine("YOU ARE DEAD...");
 				}
 				break;
+            case "take":
+				Take();
+				break;
+			case "drop":
+				Drop();
+				break;
         }
 
-		return wantToQuit;
+        return wantToQuit;
 	}
 
 	// ######################################
@@ -185,11 +207,39 @@ class Game
     }
 	private void checkAlive()
 	{
-		if (!player.isAlive())
-		{
-			Console.WriteLine("YOU ARE DEAD...");
-			Console.WriteLine("Game Over!");
-			Environment.Exit(0);
+        if (!player.isAlive())
+        {
+            Console.WriteLine("YOU ARE DEAD...");
+            Console.WriteLine("Game Over!");
+            Environment.Exit(0);
+        }
+    }
+	private void Take(){
+		var kv = player.CurrentRoom.Chest.items.FirstOrDefault();
+
+		if (kv.Value != null)
+		{		
+			Console.WriteLine("Success");
+			player.TakeFromChest(kv.Value.Description);
 		}
+		else
+		{
+			Console.WriteLine("Chest is empty");
+		}
+	}
+	public void Drop()
+	{
+        var kv = player.backpack.items.FirstOrDefault();
+
+        if (kv.Value != null)
+        {
+            Console.WriteLine("Success");
+            player.DropToChest(kv.Value.Description);
+        }
+        else
+        {
+            Console.WriteLine("Backpack is empty");
+        }
     }
 }
+ 
